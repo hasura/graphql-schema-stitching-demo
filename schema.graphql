@@ -1,0 +1,147 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+}
+
+"the root query type"
+type query_root {
+  "fetch data from the table: person"
+  person(
+
+    "filter the rows returned"
+    where: person_bool_exp
+
+    "limit the nuber of rows returned"
+    limit: Int
+
+    "skip the first n rows. Use only with order_by"
+    offset: Int
+
+    "sort the rows by one or more columns. Use +colName for ascending and -colName for descending"
+    order_by: [String]
+
+  ): [person]
+
+}
+
+"the root mutation type"
+type mutation_root {
+  "insert data into the table: person"
+  insert_person(
+
+    "the rows to be inserted"
+    objects: [person_input!]
+
+  ): person_mutation_response
+
+  "update data of the table: person"
+  update_person(
+
+    "filter the rows which have to be updated"
+    where: person_bool_exp!
+
+    "sets the columns of the filtered rows to the given values"
+    _set: person_input!
+
+  ): person_mutation_response
+
+  "delete data from the table: person"
+  delete_person(
+
+    "filter the rows which have to be deleted"
+    where: person_bool_exp!
+
+  ): person_mutation_response
+
+}
+
+scalar JSON
+"expression to compare columns of type text. All fields are combined with logical 'AND'."
+input text_comparison_exp {
+  _eq: String
+  _neq: String
+  _gt: String
+  _lt: String
+  _gte: String
+  _lte: String
+  _in: [String]
+  _nin: [String]
+  _ceq: [String]
+  _cneq: [String]
+  _cgt: [String]
+  _clt: [String]
+  _cgte: [String]
+  _clte: [String]
+  _like: [String]
+  _nlike: [String]
+  _ilike: [String]
+  _nilike: [String]
+  _similar: [String]
+  _nsimilar: [String]
+}
+
+"expression to compare columns of type integer. All fields are combined with logical 'AND'."
+input integer_comparison_exp {
+  _eq: Int
+  _neq: Int
+  _gt: Int
+  _lt: Int
+  _gte: Int
+  _lte: Int
+  _in: [Int]
+  _nin: [Int]
+  _ceq: [String]
+  _cneq: [String]
+  _cgt: [String]
+  _clt: [String]
+  _cgte: [String]
+  _clte: [String]
+}
+
+"table 'person' with all columns and relationships"
+type person {
+    name: String
+
+    city: String
+
+    id: Int
+
+}
+
+"table 'person' with only postgres columns (no relationships)"
+type person_no_rels {
+    name: String
+
+    city: String
+
+    id: Int
+
+}
+
+"response of any mutation on the table 'person'"
+type person_mutation_response {
+  "number of affected rows by the mutation"
+  affected_rows: Int
+
+  "data of the affected rows by the mutation"
+  returning: person_no_rels
+
+}
+
+"input type for inserting/updating data in table person"
+input person_input {
+  name: String
+  city: String
+  id: Int
+}
+
+"boolean expression to filter rows from the table person. All fields are combined with logical 'AND'."
+input person_bool_exp {
+  name: text_comparison_exp
+  city: text_comparison_exp
+  id: integer_comparison_exp
+  _not: person_bool_exp
+  _and: [person_bool_exp]
+  _or: [person_bool_exp]
+}
+
