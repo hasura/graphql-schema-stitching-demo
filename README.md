@@ -4,6 +4,11 @@ Schema stitching is the process of creating a single GraphQL schema from multipl
 
 Schema stitching allows you to have one unified API that allows the client to query multiple GraphQL Schemas at the same time, including relations between the schemas.
 
+### Prerequisites
+
+This demo requires Hasura's GraphQL Engine running with the following schema:
+A table called `Person` with columns `id`, `name`, and `city`.
+
 ### Usage
 
 ```
