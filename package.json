@@ -1,4 +1,9 @@
 {
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hasura/graphql-schema-stitching-demo"
+  },
   "scripts": {
     "start": "nodemon -r esm index.js"
   },
