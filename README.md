@@ -8,10 +8,10 @@ Schema stitching allows you to have one unified API that allows the client to qu
 
 ```
 npm install
-npm start
+HASURA_GRAPHQL_ENGINE_URL=http://localhost:9000 npm start
 ```
 
-Change the `CLUSTER_NAME` environment variable to point to a hasura cluster having the `person` schema. Then, open [localhost:8080/graphiql](http://localhost:8080/graphiql) in your web browser, and start exploring with your query.
+Change the `HASURA_GRAPHQL_ENGINE_URL` environment variable to point to a hasura graphql-engine with the `person` schema. Then, open [localhost:8080/graphiql](http://localhost:8080/graphiql) in your web browser, and start exploring with your query.
 
 ### Merge Schemas
 This demo combines two GraphQL schemas and exposes them on a single API:

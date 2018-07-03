@@ -7,7 +7,7 @@ import { makeRemoteExecutableSchema, mergeSchemas, introspectSchema } from 'grap
 import { HttpLink } from 'apollo-link-http';
 
 const WEATHER_GRAPHQL_API_URL = 'https://nxw8w0z9q7.lp.gql.zone/graphql'; // metaweather graphql api
-const HASURA_GRAPHQL_API_URL = 'http://localhost:9000/v1alpha1/graphql'; // replace this url
+const HASURA_GRAPHQL_API_URL = process.env.HASURA_GRAPHQL_ENGINE_URL + '/v1alpha1/graphql'; // replace this url
 
 async function run() {
 
