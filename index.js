@@ -1,31 +1,27 @@
 import Express from 'express';
 import fetch from 'node-fetch';
 import bodyParser from 'body-parser';
-import fs from 'fs';
 
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
-import { makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas, introspectSchema } from 'graphql-tools';
-import { createApolloFetch } from 'apollo-fetch';
+import { makeRemoteExecutableSchema, mergeSchemas, introspectSchema } from 'graphql-tools';
 import { HttpLink } from 'apollo-link-http';
 
-const WEATHER_GRAPHQL_API_URL = 'https://nxw8w0z9q7.lp.gql.zone/graphql';
-const HASURA_GRAPHQL_API_URL = 'https://data.' + process.env.CLUSTER_NAME + '.hasura-app.io/v1alpha1/graphql';
+const WEATHER_GRAPHQL_API_URL = 'https://nxw8w0z9q7.lp.gql.zone/graphql'; // metaweather graphql api
+const HASURA_GRAPHQL_API_URL = 'http://localhost:9000/v1alpha1/graphql'; // replace this url
 
 async function run() {
 
   const createRemoteSchema = async (uri) => {
-    const fetcher = createApolloFetch({uri});
+    const link = new HttpLink({uri: uri, fetch});
+    const schema = await introspectSchema(link);
     return makeRemoteExecutableSchema({
-      schema: await introspectSchema(fetcher),
-      fetcher
+      schema,
+      link,
     });
-  }
+  };
 
   const executableWeatherSchema = await createRemoteSchema(WEATHER_GRAPHQL_API_URL);
-  const hasuraLink = new HttpLink({ uri: HASURA_GRAPHQL_API_URL, fetch });
-
-  // import graphql schema having person table
-  const hasuraGraphSchema = fs.readFileSync('./schema.graphql', "utf8");
+  const executableHasuraSchema = await createRemoteSchema(HASURA_GRAPHQL_API_URL);
 
   const hasuraWeatherResolvers = {
     person: {
@@ -52,11 +48,6 @@ async function run() {
       city_weather: CityWeather,
     }
   `;
-
-  const executableHasuraSchema = await makeRemoteExecutableSchema({
-    schema: hasuraGraphSchema,
-    link: hasuraLink,
-  });
 
   const finalSchema = mergeSchemas({
     schemas: [
